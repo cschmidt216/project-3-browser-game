@@ -1,11 +1,14 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {Form, Button} from 'semantic-ui-react';
 import gql from 'graphql-tag';
 import {useMutation} from '@apollo/client';
 import {useNavigate} from 'react-router-dom'; // Import useNavigate hook
 
+import { AuthContext } from '../utils/authContext';
+
 function Login() {
     const navigate = useNavigate(); // Initialize useNavigate hook
+    const context = useContext(AuthContext);
   
     const [values, setValues] = useState({
       email: '',
@@ -18,7 +21,8 @@ function Login() {
   
     const [loginUser] = useMutation(LOGIN_USER, {
       update(_, result) {
-        console.log(result);
+        console.log(result.data.loginUser);
+        context.login(result.data.loginUser);   
         navigate('/'); // Use navigate here
       },
       variables: values,
