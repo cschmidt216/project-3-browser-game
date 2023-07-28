@@ -2,28 +2,31 @@ import React, {useState} from 'react';
 import {Form, Button} from 'semantic-ui-react';
 import gql from 'graphql-tag';
 import {useMutation} from '@apollo/client';
+import {useNavigate} from 'react-router-dom'; // Import useNavigate hook
 
-function Login(props) {
+function Login() {
+    const navigate = useNavigate(); // Initialize useNavigate hook
+  
     const [values, setValues] = useState({
-        email: '',
-        password: '',
+      email: '',
+      password: '',
     });
-
+  
     const onChange = (event) => {
-        setValues({...values, [event.target.name]: event.target.value});
+      setValues({ ...values, [event.target.name]: event.target.value });
     };
-
+  
     const [loginUser] = useMutation(LOGIN_USER, {
-        update(_, result) {
-            console.log(result);
-            props.history.push('/');
-        },
-        variables: values
+      update(_, result) {
+        console.log(result);
+        navigate('/'); // Use navigate here
+      },
+      variables: values,
     });
-
+  
     const Submit = (event) => {
-        event.preventDefault();
-        loginUser();
+      event.preventDefault();
+      loginUser();
     };
 
     return (
@@ -56,8 +59,8 @@ const LOGIN_USER = gql`
         $email: String!
         $password: String!
     ) {
-        createUser(
-            userInput: {
+        loginUser(
+            loginInput: {
                 email: $email
                 password: $password
             }

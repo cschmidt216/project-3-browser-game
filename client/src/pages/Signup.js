@@ -2,8 +2,11 @@ import React, {useState} from 'react';
 import {Form, Button} from 'semantic-ui-react';
 import gql from 'graphql-tag';
 import {useMutation} from '@apollo/client';
+import {useNavigate} from 'react-router-dom'; // Import useNavigate hook
 
-function Signup(props) {
+function Signup() {
+    const navigate = useNavigate(); // Initialize useNavigate hook
+
     const [values, setValues] = useState({
         username: '',
         email: '',
@@ -17,7 +20,7 @@ function Signup(props) {
     const [addUser] = useMutation(CREATE_USER, {
         update(_, result) {
             console.log(result);
-            props.history.push('/');
+            navigate('/'); // Use navigate here
         },
         variables: values
     });
