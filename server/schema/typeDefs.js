@@ -51,11 +51,15 @@ type Users {
   }
   input CharacterInput {
     name: String!
+    shape: String!
+    style: String!
     moves: [ID]
   }
   type Query {
     getUser(userId: ID!): Users
     getCharacterById(characterId: ID!): Characters!
+    getAllCharacters(userId: ID!): [Characters]!
+    getAllMoves(characterId: ID!): [Moves]!
   }
   
   type Mutation {

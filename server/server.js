@@ -2,12 +2,14 @@ const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const path = require('path');
 const { authMiddleware } = require('./utils/auth.js');
+const cors = require('cors');
 
 const { typeDefs, resolvers } = require('./schema');
 const db = require('./config/connection');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
+app.use(cors());
 const server = new ApolloServer({
   typeDefs,
   resolvers,

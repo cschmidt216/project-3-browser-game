@@ -4,11 +4,12 @@
     "description": "Your project description",
     "main": "index.js",
     "scripts": {
-      "start": "nodemon server/server.js"
+        "start": "nodemon server/server.js"
     },
     "dependencies": {
-      "express": "^4.17.1",
-      "mongoose": "^6.1.4",
-      "mongodb": "^4.4.7"
+        "cors": "^2.8.5",
+        "express": "^4.17.1",
+        "mongodb": "^4.4.7",
+        "mongoose": "^6.1.4"
     }
-  }
+}

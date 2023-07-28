@@ -19,12 +19,35 @@ const resolvers = {
       } catch (err) {
         throw new Error(err);
       }
+    },
+    //make a query to find all characters belonging to logged in user
+    async getAllCharacters(_, { userId }) {
+      try {
+        const characters = await Characters.find({ userId });
+        if (characters) {
+          return characters;
+        } else {
+          throw new Error('Character not found');
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+   //make a query to find all moves belonging to a character
+    async getAllMoves(_, { characterId }) {
+      try {
+        const moves = await Moves.find({ characterId });
+        if (moves) {
+          return moves;
+        } else {
+          throw new Error('Moves not found');
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
     }
   },
-  //make a query to find all characters belonging to logged in user
-  
-  //make a query to find all moves belonging to a character
-
+   
   Mutation: {
     async createUser(_, { userInput: { username, password, email } }) {
       try {
@@ -101,11 +124,10 @@ const resolvers = {
         id: user._id,
         token,
       };
-    }
-  },
-  //make a mutation to create a character
+    },
+      //make a mutation to create a character
   //character has to be linked to logged in user and have 4 moves also gonna add created at.
-  async createCharacter(_, { characterInput: { name, moves } }, context) {
+  async createCharacter(_, { characterInput: { name, moves, shape, style } }, context) {
     const user = authMiddleware(context);
     const newCharacter = new Characters({
       name,
@@ -133,6 +155,8 @@ const resolvers = {
       throw new Error(err);
     }
   },
+},
+
 };
 
 module.exports = resolvers;
