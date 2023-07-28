@@ -14,13 +14,16 @@ type Users {
     _id: ID!
     user: Users!
     name: String!
+    createdAt: String!
+    shape: String!
+    style: String!
     stat1: Float
     stat2: Float
     stat3: Float
     stat4: Float
     stat5: Float
     stat6: Float
-    moves: [Moves]
+    moves: [Moves]!
   }
   
   type Moves {

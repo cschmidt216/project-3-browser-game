@@ -2,7 +2,7 @@ const { Users, Characters, Moves } = require('../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const {db, SECRET_KEY} = require('../config/connection.js');
-const { signToken } = require('../utils/auth');
+const { signToken, authMiddleware } = require('../utils/auth');
 const { validateRegisterInput, validateLoginInput } = require('../utils/validators');
 const { UserInputError } = require('apollo-server-express');
 
@@ -104,8 +104,35 @@ const resolvers = {
     }
   },
   //make a mutation to create a character
-  //character has to be linked to logged in user and have 4 moves
-  
+  //character has to be linked to logged in user and have 4 moves also gonna add created at.
+  async createCharacter(_, { characterInput: { name, moves } }, context) {
+    const user = authMiddleware(context);
+    const newCharacter = new Characters({
+      name,
+      moves,
+      shape,
+      style,
+      user: user._id,
+      createdAt: new Date().toISOString()
+    });
+    const character = await newCharacter.save();
+    return character;
+  },
+  //make a mutation to delete a character
+  async deleteCharacter(_, { characterId }, context) {
+    const user = authMiddleware(context);
+    try {
+      const character = await Characters.findById(characterId);
+      if (user._id === character.user) {
+        await character.delete();
+        return 'Character deleted successfully';
+      } else {
+        throw new Error('Action not allowed');
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
 };
 
 module.exports = resolvers;
