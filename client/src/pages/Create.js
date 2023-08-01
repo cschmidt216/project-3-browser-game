@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext} from 'react';
 import { Form, Button,  Card, } from 'semantic-ui-react';
 import gql from 'graphql-tag';
 import { useMutation, useQuery } from '@apollo/client';
@@ -9,8 +9,6 @@ import MoveCard from '../components/moveCard';
 
 function CharacterCreation() {
   const context = useContext(AuthContext);
-  
-  console.log('Context:', context.user);
 
   const [characterValues, setCharacterValues] = useState({
     name: '',
@@ -22,12 +20,6 @@ function CharacterCreation() {
   const [selectedMoves, setSelectedMoves] = useState([]); 
 
   const { loading, data } = useQuery(GET_ALL_MOVES);  
-
-  useEffect(() => {
-    if (data && data.getAllMoves) {
-      setCharacterValues(prevState => ({ ...prevState, moves: selectedMoves.slice(0, 4) })); // Limit the selected moves to four
-    }
-  }, [data, selectedMoves]);
 
   const onChange = (event, { name, value }) => {
     setCharacterValues({ ...characterValues, [name]: value });
@@ -43,16 +35,18 @@ function CharacterCreation() {
     }
   };
 
+  const ID = context.user._id;
+
   const [createCharacter] = useMutation(CREATE_CHARACTER, {
     variables: {
       characterInput: {
         name: characterValues.name,
-        moves: selectedMoves, // Use selectedMoves here
+        moves: characterValues.moves,
         shape: characterValues.shape,
         style: characterValues.style,
-        // Use the user's ID from the context
-        user: context.user ? context.user._id : null,
+        user: ID
       },
+
     },
     update: (_, result) => {
       console.log('Update after character creation:', result); // log the result after update
@@ -74,7 +68,14 @@ function CharacterCreation() {
       return;
     }
     console.log('Submitting character creation:', characterValues); // log characterValues on submit
-    createCharacter()
+    createCharacter({
+      variables: {
+        characterInput: {
+          ...characterValues,
+          user: ID,
+        },
+      },
+    })
       .then(response => {
         console.log('Character created:', response); // log the response if successful
       })
@@ -141,25 +142,21 @@ function CharacterCreation() {
 }
 
 const CREATE_CHARACTER = gql`
-    mutation createCharacter(
-        $characterInput: CharacterInput!
-    ) {
-        createCharacter(
-            characterInput: $characterInput
-        ) {
-            _id
-            name
-            moves {
-              _id
-              name
-              description
-              uses
-            }
-            shape
-            style
-            user
-        }
+  mutation createCharacter($characterInput: CharacterInput!) {
+    createCharacter(characterInput: $characterInput) {
+      _id
+      name
+      moves {
+        _id
+        name
+        description
+        uses
+      }
+      shape
+      style
+      user
     }
+  }
 `;
 
 const GET_ALL_MOVES = gql`

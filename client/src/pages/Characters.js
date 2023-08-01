@@ -1,14 +1,16 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
 import { Grid, Button } from 'semantic-ui-react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 
 import CharacterCard from '../components/CharacterCard';
+import { AuthContext } from '../utils/authContext'; // Import AuthContext
 
 function Characters() {
+    const context = useContext(AuthContext); // Initialize AuthContext
     const { loading, data } = useQuery(GET_CHARACTERS, {
-        variables: { userId: localStorage.getItem('userId') }, // Pass the userId variable to the query
+        variables: { userId: context.user ? context.user._id : null },
     });
     const characters = data?.characters; // Extract the characters from the data object
     const navigate = useNavigate(); // Initialize useNavigate hook

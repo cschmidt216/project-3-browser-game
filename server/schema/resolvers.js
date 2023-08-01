@@ -139,25 +139,21 @@ const resolvers = {
         token,
       };
     },
-    async createCharacter(_, { characterInput: { name, moves, shape, style } }, context) {
+    async createCharacter(_, { characterInput: { name, moves, shape, style, user }}) {
       // check if user is authenticated
-      if (!context.user) {
+      if (!user) {
         throw new Error('Authentication failed. Please log in.');
       }
-      console.log(context.user)
-      // get user's id
-      const userId = context.user._id;
-      console.log({userId})
-    
+
       const newCharacter = new Characters({
           name,
           moves,
           shape,
           style,
-          userId: user._id,
+          user,
           createdAt: new Date().toISOString(),
       });
-    
+
       const character = await newCharacter.save();
       return character;
     },

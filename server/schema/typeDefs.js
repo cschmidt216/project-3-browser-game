@@ -7,7 +7,6 @@ type Users {
     password: String!
     email: String!
     token: String!
-    character: Characters
   }
   
   type Characters {
@@ -52,12 +51,11 @@ type Users {
   }
   input CharacterInput {
     _id: ID
-    user: ID!
     name: String!
     shape: String!
     style: String!
-    moves: [ID]
-    createdAt: String
+    moves: [ID]!
+    user: ID!
   }
   type Query {
     getUser(userId: ID!): Users
