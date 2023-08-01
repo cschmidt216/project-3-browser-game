@@ -1,8 +1,5 @@
 const { Schema, model } = require('mongoose');
-
-function movesLimitValidator(val) {
-  return val.length <= 4;
-}
+const { array } = require('mongoose-validators');
 
 const characterSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'Users' },
@@ -16,7 +13,15 @@ const characterSchema = new Schema({
   stat4: Number,
   stat5: Number,
   stat6: Number,
-  moves: [{ type: Schema.Types.ObjectId, ref: 'Moves' , validate: [movesLimitValidator, 'You can only have 4 moves!'] }]
+  moves: { 
+    type: [{ type: Schema.Types.ObjectId, ref: 'Moves' }],
+    validate: {
+      validator: function(val) {
+        return val.length <= 4;
+      },
+      message: 'You can only have up to 4 moves!'
+    }
+  }
 });
 
 module.exports = model('Characters', characterSchema);

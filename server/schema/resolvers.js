@@ -22,14 +22,15 @@ const resolvers = {
       }
     },
     //make a query to find all characters belonging to logged in user
+
     async getAllCharacters(_, { userId }) {
       try {
-        const characters = await Characters.find({ userId });
-        if (characters) {
-          return characters;
-        } else {
-          throw new Error('Character not found');
+        const characters = await Characters.find({ user: userId });
+        for (let character of characters) {
+          const moveIds = character.moves.map(move => move._id);
+          character.moves = await Moves.find({ _id: { $in: moveIds } });
         }
+        return characters;
       } catch (err) {
         throw new Error(err);
       }
@@ -139,24 +140,29 @@ const resolvers = {
         token,
       };
     },
-    async createCharacter(_, { characterInput: { name, moves, shape, style, user }}) {
-      // check if user is authenticated
-      if (!user) {
-        throw new Error('Authentication failed. Please log in.');
-      }
-
-      const newCharacter = new Characters({
-          name,
-          moves,
-          shape,
-          style,
-          user,
-          createdAt: new Date().toISOString(),
+    createCharacter: async (_, { characterInput }, context) => {
+      const character = new Characters({
+        user: characterInput.user,
+        name: characterInput.name,
+        shape: characterInput.shape,
+        style: characterInput.style,
+        moves: characterInput.moves,
+        stat1: 10,
+        stat2: 10,
+        stat3: 10,
+        stat4: 10,
+        stat5: 10,
+        stat6: 10,
       });
 
-      const character = await newCharacter.save();
+      await character.save();
+
+      // Populate the moves field with the actual move documents
+      await Characters.populate(character, { path: 'moves' });
+
       return character;
     },
+  
   //make a mutation to delete a character
   async deleteCharacter(_, { characterId }, context) {
     const user = authMiddleware(context);
@@ -171,6 +177,13 @@ const resolvers = {
     } catch (err) {
       throw new Error(err);
     }
+  },
+},
+Characters: {
+  moves: async (parent) => {
+    return await Moves.find({
+      _id: { $in: parent.moves }
+    });
   },
 },
 

@@ -2,14 +2,15 @@ import React, { useState, useContext} from 'react';
 import { Form, Button,  Card, } from 'semantic-ui-react';
 import gql from 'graphql-tag';
 import { useMutation, useQuery } from '@apollo/client';
-
+import { useNavigate } from 'react-router-dom';
 
 import { AuthContext } from '../utils/authContext';
 import MoveCard from '../components/moveCard';
 
 function CharacterCreation() {
   const context = useContext(AuthContext);
-
+  const Navigate = useNavigate(); 
+  
   const [characterValues, setCharacterValues] = useState({
     name: '',
     shape: '',
@@ -18,6 +19,10 @@ function CharacterCreation() {
   });
 
   const [selectedMoves, setSelectedMoves] = useState([]); 
+
+  React.useEffect(() => {
+    setCharacterValues(prevValues => ({ ...prevValues, moves: selectedMoves }));
+  }, [selectedMoves]);
 
   const { loading, data } = useQuery(GET_ALL_MOVES);  
 
@@ -29,9 +34,17 @@ function CharacterCreation() {
     if (selectedMoves.includes(moveId)) {
       // Deselect the move
       setSelectedMoves(selectedMoves.filter((id) => id !== moveId));
+      setCharacterValues(prevValues => ({
+        ...prevValues,
+        moves: prevValues.moves.filter((id) => id !== moveId),
+      }));
     } else if (selectedMoves.length < 4) {
       // Select the move (up to four moves)
       setSelectedMoves([...selectedMoves, moveId]);
+      setCharacterValues(prevValues => ({
+        ...prevValues,
+        moves: [...prevValues.moves, moveId],
+      }));
     }
   };
 
@@ -44,7 +57,13 @@ function CharacterCreation() {
         moves: characterValues.moves,
         shape: characterValues.shape,
         style: characterValues.style,
-        user: ID
+        user: ID,
+        stat1: 10,
+        stat2: 10,
+        stat3: 10,
+        stat4: 10,
+        stat5: 10,
+        stat6: 10,
       },
 
     },
@@ -67,7 +86,6 @@ function CharacterCreation() {
       console.error("User is not authenticated");
       return;
     }
-    console.log('Submitting character creation:', characterValues); // log characterValues on submit
     createCharacter({
       variables: {
         characterInput: {
@@ -78,11 +96,12 @@ function CharacterCreation() {
     })
       .then(response => {
         console.log('Character created:', response); // log the response if successful
+        Navigate('/characters'); // navigate to the characters page
       })
       .catch(error => {
         console.log('Error creating character:', error); // log the error if there's a failure
       });
-  };
+};
 
   if (loading) return 'Loading...';
   if (!data || !data.getAllMoves) return 'No Moves Data...';
