@@ -20,13 +20,14 @@ function Login() {
     };
   
     const [loginUser] = useMutation(LOGIN_USER, {
-      update(_, result) {
-        console.log(result.data.loginUser);
-        context.login(result.data.loginUser);   
-        navigate('/'); // Use navigate here
-      },
-      variables: values,
-    });
+        update(_, result) {
+          console.log(result.data.loginUser);
+          context.login(result.data.loginUser);
+          localStorage.setItem('jwtToken', result.data.loginUser.token); // Store the token in local storage
+          navigate('/'); // Use navigate here
+        },
+        variables: values,
+      });
   
     const Submit = (event) => {
       event.preventDefault();

@@ -7,7 +7,9 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import CharacterCard from '../components/CharacterCard';
 
 function Characters() {
-    const { loading, data } = useQuery(GET_CHARACTERS);
+    const { loading, data } = useQuery(GET_CHARACTERS, {
+        variables: { userId: localStorage.getItem('userId') }, // Pass the userId variable to the query
+    });
     const characters = data?.characters; // Extract the characters from the data object
     const navigate = useNavigate(); // Initialize useNavigate hook
     const handleSubmit = () => {

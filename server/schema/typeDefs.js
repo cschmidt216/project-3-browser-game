@@ -12,7 +12,7 @@ type Users {
   
   type Characters {
     _id: ID!
-    user: Users!
+    user: ID!
     name: String!
     createdAt: String!
     shape: String!
@@ -29,6 +29,7 @@ type Users {
   type Moves {
     _id: ID!
     name: String!
+    description: String!
     uses: Int!
     damage: Float!
     accuracy: Float!
@@ -50,16 +51,20 @@ type Users {
     password: String
   }
   input CharacterInput {
+    _id: ID
+    user: ID!
     name: String!
     shape: String!
     style: String!
     moves: [ID]
+    createdAt: String
   }
   type Query {
     getUser(userId: ID!): Users
     getCharacterById(characterId: ID!): Characters!
     getAllCharacters(userId: ID!): [Characters]!
-    getAllMoves(characterId: ID!): [Moves]!
+    getAllMovesForCharacter(characterId: ID!): [Moves]!
+    getAllMoves: [Moves]!
   }
   
   type Mutation {

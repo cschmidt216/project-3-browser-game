@@ -1,4 +1,5 @@
 const { Users, Characters, Moves } = require('../models');
+const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const {db, SECRET_KEY} = require('../config/connection.js');
@@ -34,7 +35,7 @@ const resolvers = {
       }
     },
    //make a query to find all moves belonging to a character
-    async getAllMoves(_, { characterId }) {
+    async getAllMovesForCharacter(_, { characterId }) {
       try {
         const moves = await Moves.find({ characterId });
         if (moves) {
@@ -45,9 +46,22 @@ const resolvers = {
       } catch (err) {
         throw new Error(err);
       }
+    },
+    async getAllMoves(_, args, context) {
+    try {
+      const moves = await Moves.find();
+      if (moves) {
+        return moves;
+      } else {
+        throw new Error('Moves not found');
+      }
+    } catch (err) {
+      throw new Error(err);
     }
   },
-   
+  },
+
+
   Mutation: {
     async createUser(_, { userInput: { username, password, email } }) {
       try {
@@ -125,21 +139,28 @@ const resolvers = {
         token,
       };
     },
-      //make a mutation to create a character
-  //character has to be linked to logged in user and have 4 moves also gonna add created at.
-  async createCharacter(_, { characterInput: { name, moves, shape, style } }, context) {
-    const user = authMiddleware(context);
-    const newCharacter = new Characters({
-      name,
-      moves,
-      shape,
-      style,
-      user: user._id,
-      createdAt: new Date().toISOString()
-    });
-    const character = await newCharacter.save();
-    return character;
-  },
+    async createCharacter(_, { characterInput: { name, moves, shape, style } }, context) {
+      // check if user is authenticated
+      if (!context.user) {
+        throw new Error('Authentication failed. Please log in.');
+      }
+      console.log(context.user)
+      // get user's id
+      const userId = context.user._id;
+      console.log({userId})
+    
+      const newCharacter = new Characters({
+          name,
+          moves,
+          shape,
+          style,
+          userId: user._id,
+          createdAt: new Date().toISOString(),
+      });
+    
+      const character = await newCharacter.save();
+      return character;
+    },
   //make a mutation to delete a character
   async deleteCharacter(_, { characterId }, context) {
     const user = authMiddleware(context);
