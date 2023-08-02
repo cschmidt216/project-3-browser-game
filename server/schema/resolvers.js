@@ -21,7 +21,20 @@ const resolvers = {
         throw new Error(err);
       }
     },
-    //make a query to find all characters belonging to logged in user
+    async findRandomOpponent(_, { userId }) {
+      try {
+        const allCharacters = await Characters.find({ user: { $ne: mongoose.Types.ObjectId(userId) } });
+        const randomIndex = Math.floor(Math.random() * allCharacters.length);
+        const opponentCharacter = allCharacters[randomIndex];
+        if (opponentCharacter) {
+          const moveIds = opponentCharacter.moves.map(move => move._id);
+          opponentCharacter.moves = await Moves.find({ _id: { $in: moveIds } });
+        }
+        return opponentCharacter;
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
 
     async getAllCharacters(_, { userId }) {
       try {
@@ -147,7 +160,7 @@ const resolvers = {
         shape: characterInput.shape,
         style: characterInput.style,
         moves: characterInput.moves,
-        stat1: 10,
+        stat1: 100,
         stat2: 10,
         stat3: 10,
         stat4: 10,

@@ -63,6 +63,7 @@ type Users {
     getAllCharacters(userId: ID!): [Characters]!
     getAllMovesForCharacter(characterId: ID!): [Moves]!
     getAllMoves: [Moves]!
+    findRandomOpponent(userId: ID!): Characters
   }
   
   type Mutation {

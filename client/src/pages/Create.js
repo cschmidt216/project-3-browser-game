@@ -58,7 +58,7 @@ function CharacterCreation() {
         shape: characterValues.shape,
         style: characterValues.style,
         user: ID,
-        stat1: 10,
+        stat1: 100,
         stat2: 10,
         stat3: 10,
         stat4: 10,
