@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Card, Button, Modal } from 'semantic-ui-react';
+import { AuthContext } from '../utils/authContext';
 
 function CharacterCard({ character }) {
   const [modalOpen, setModalOpen] = useState(false);
+  const { selectCharacter } = useContext(AuthContext);
+
+  const handleSelect = () => {
+    selectCharacter(character._id);
+  };
 
   return (
     <Card>
@@ -21,14 +27,14 @@ function CharacterCard({ character }) {
               <p>Created At: {new Date(parseInt(character.createdAt)).toLocaleDateString()}</p>
               <p>Moves:</p>
               <ul>
-  {character.moves && character.moves.length > 0 ? (
-    character.moves.map((move) => (
-      <li key={move._id}>{move.name}</li>
-    ))
-  ) : (
-    <p>No moves found.</p>
-  )}
-</ul>
+                {character.moves && character.moves.length > 0 ? (
+                  character.moves.map((move) => (
+                    <li key={move._id}>{move.name}</li>
+                  ))
+                ) : (
+                  <p>No moves found.</p>
+                )}
+              </ul>
             </Modal.Description>
           </Modal.Content>
           <Modal.Actions>
@@ -37,6 +43,7 @@ function CharacterCard({ character }) {
             </Button>
           </Modal.Actions>
         </Modal>
+        <Button onClick={handleSelect}>Select</Button> {/* New Button */}
       </Card.Content>
     </Card>
   );
