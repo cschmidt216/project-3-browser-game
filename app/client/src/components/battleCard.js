@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Button } from 'semantic-ui-react';
 
-function BattleCard({ character, isUserCard, onAttack }) {
+function BattleCard({ character, isUserCard, onAttack, userCanAct }) {
   if (!character) {
     return <p>Loading...</p>; 
   }
@@ -24,7 +24,7 @@ function BattleCard({ character, isUserCard, onAttack }) {
           {character.moves.map((move) => (
             <Button 
               key={move._id} 
-              disabled={!isUserCard}
+              disabled={!isUserCard || !userCanAct} // add the `userCanAct` condition here
               onClick={() => isUserCard && onAttack(move)}
             >
               {move.name} ({move.uses})

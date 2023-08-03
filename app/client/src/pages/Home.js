@@ -3,21 +3,25 @@ import { useQuery, gql, useLazyQuery } from '@apollo/client';
 import { AuthContext } from '../utils/authContext';
 import BattleCard from '../components/battleCard';
 import { Button, Feed } from 'semantic-ui-react';
-import { aiTurn, handleAttack, applyStatBoosts } from '../utils/gameLogic';
+import { handleAttack, applyStatBoosts } from '../utils/gameLogic';
+
 
 function Home() {
   const { user, selectedCharacter } = useContext(AuthContext);
 
-  const { loading, error, data } = useQuery(GET_CHARACTER, {
+  const { loading, error, data, refetch } = useQuery(GET_CHARACTER, {
     variables: { characterId: selectedCharacter },
-    skip: !selectedCharacter 
+    skip: !selectedCharacter
   });
 
-  const [getRandomOpponent, { called: opponentCalled, loading: opponentLoading, data: opponentData }] = useLazyQuery(FIND_RANDOM_OPPONENT);
+  const [getRandomOpponent, { called: opponentCalled, loading: opponentLoading, data: opponentData }] = useLazyQuery(FIND_RANDOM_OPPONENT, {
+    fetchPolicy: 'network-only'
+  });
 
   const [userCharacter, setUserCharacter] = useState();
   const [opponentCharacter, setOpponentCharacter] = useState();
   const [gameMessages, setGameMessages] = useState([]);
+  const [userCanAct, setUserCanAct] = useState(true);
 
   useEffect(() => {
     if (data?.getCharacterById) {
@@ -43,26 +47,53 @@ function Home() {
       () => {},
       null 
     );
+    setUserCanAct(true);
   };
   
+  const [gameReset, setGameReset] = useState(false);
+
   // Reset function
-  const resetGame = () => {
+  const resetGame = async () => {
+    console.log('Reset game called');
     setUserCharacter(null);
     setOpponentCharacter(null);
     setGameMessages([]);
-  };
+    setGameReset(true);
+    if (refetch) {
+      const { data } = await refetch();
+      if (data?.getCharacterById) {
+        const characterWithBoosts = applyStatBoosts(data.getCharacterById);
+        setUserCharacter(characterWithBoosts);
+      }
+    }
+};
+  
+  // useEffect hook to handle game reset
+  useEffect(() => {
+    if (gameReset) {
+      refetch();
+      setGameReset(false);
+    }
+  }, [gameReset, refetch]);
   
   const handleUserAttack = (move) => {
-    handleAttack(
-      userCharacter, 
-      opponentCharacter, 
-      setOpponentCharacter, 
-      move, 
-      setGameMessages, 
-      handleOpponentAttack,
-      resetGame 
-    );
+    if (userCanAct) {
+      handleAttack(
+        userCharacter, 
+        opponentCharacter, 
+        setOpponentCharacter, 
+        move, 
+        setGameMessages, 
+        handleOpponentAttack,
+        resetGame 
+      );
+      setUserCanAct(false);
+    }
   };
+
+  useEffect(() => {
+    console.log('User character:', userCharacter);
+}, [userCharacter]);
 
   
   const renderContent = () => {
@@ -80,7 +111,7 @@ function Home() {
     return (
       <div>
         <h1>Welcome, {user.username}!</h1>
-        {userCharacter && <BattleCard character={userCharacter} isUserCard={true} onAttack={handleUserAttack} />}
+        {userCharacter && <BattleCard character={userCharacter} isUserCard={true} onAttack={handleUserAttack} userCanAct={userCanAct} setUserCanAct={setUserCanAct} />}
       </div>
     );
   };
