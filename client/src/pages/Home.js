@@ -3,9 +3,7 @@ import { useQuery, gql, useLazyQuery } from '@apollo/client';
 import { AuthContext } from '../utils/authContext';
 import BattleCard from '../components/battleCard';
 import { Button, Feed } from 'semantic-ui-react';
-import { aiTurn, handleAttack } from '../utils/gameLogic';
-
-// Define the GET_CHARACTER query
+import { aiTurn, handleAttack, applyStatBoosts } from '../utils/gameLogic';
 
 function Home() {
   const { user, selectedCharacter } = useContext(AuthContext);
@@ -23,13 +21,15 @@ function Home() {
 
   useEffect(() => {
     if (data?.getCharacterById) {
-      setUserCharacter(data.getCharacterById);
+      const characterWithBoosts = applyStatBoosts(data.getCharacterById);
+      setUserCharacter(characterWithBoosts);
     }
   }, [data]);
-
+  
   useEffect(() => {
     if (opponentData?.findRandomOpponent) {
-      setOpponentCharacter(opponentData.findRandomOpponent);
+      const opponentWithBoosts = applyStatBoosts(opponentData.findRandomOpponent);
+      setOpponentCharacter(opponentWithBoosts);
     }
   }, [opponentData]);
 
@@ -40,9 +40,18 @@ function Home() {
       setUserCharacter,
       move,
       setGameMessages,
-      () => {}
+      () => {},
+      null 
     );
   };
+  
+  // Reset function
+  const resetGame = () => {
+    setUserCharacter(null);
+    setOpponentCharacter(null);
+    setGameMessages([]);
+  };
+  
   const handleUserAttack = (move) => {
     handleAttack(
       userCharacter, 
@@ -50,7 +59,8 @@ function Home() {
       setOpponentCharacter, 
       move, 
       setGameMessages, 
-      handleOpponentAttack
+      handleOpponentAttack,
+      resetGame 
     );
   };
 
@@ -87,13 +97,17 @@ function Home() {
       {renderContent()}
       {user && selectedCharacter && 
         <>
-          <Button 
-            variant="contained" 
-            color="primary"
-            onClick={() => getRandomOpponent({ variables: { userId: user._id } })}
-          >
-            Find Battle
-          </Button>
+      {user && selectedCharacter && !opponentCharacter &&
+        <>
+        <Button 
+          variant="contained" 
+          color="primary"
+          onClick={() => getRandomOpponent({ variables: { userId: user._id } })}
+        >
+          Find Battle
+        </Button>
+      </>
+      }
           {renderOpponent()}
         </>
       }
@@ -175,7 +189,3 @@ const FIND_RANDOM_OPPONENT = gql`
 `;
 
 export default Home;
-
-
-
-
