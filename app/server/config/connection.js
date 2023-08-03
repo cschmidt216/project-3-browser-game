@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 
   
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://0.0.0.0:27017/gameDB', {
+mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://cschmidt216:Nintendo-621@cluster0.zv0lzke.mongodb.net/gameDB?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   dbName: ' gameDB'
@@ -21,3 +21,6 @@ db.once('open', () => {
 });
 
 module.exports = db //SECRET_KEY;
+
+
+  
