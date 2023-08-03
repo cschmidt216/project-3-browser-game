@@ -21,7 +21,7 @@ function Home() {
   const [userCharacter, setUserCharacter] = useState();
   const [opponentCharacter, setOpponentCharacter] = useState();
   const [gameMessages, setGameMessages] = useState([]);
-  const [userCanAct, setUserCanAct] = useState(true);
+  const [userCanAct, setUserCanAct] = useState(false);
 
   useEffect(() => {
     if (data?.getCharacterById) {
@@ -58,6 +58,7 @@ function Home() {
     setUserCharacter(null);
     setOpponentCharacter(null);
     setGameMessages([]);
+    setUserCanAct(false); // Reset userCanAct
     setGameReset(true);
     if (refetch) {
       const { data } = await refetch();
@@ -66,7 +67,7 @@ function Home() {
         setUserCharacter(characterWithBoosts);
       }
     }
-};
+  };
   
   // useEffect hook to handle game reset
   useEffect(() => {
@@ -133,7 +134,10 @@ function Home() {
         <Button 
           variant="contained" 
           color="primary"
-          onClick={() => getRandomOpponent({ variables: { userId: user._id } })}
+          onClick={() => {
+            getRandomOpponent({ variables: { userId: user._id } });
+            setUserCanAct(true);
+          }}
         >
           Find Battle
         </Button>
