@@ -7,8 +7,8 @@ const mongoose = require('mongoose');
 mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://cschmidt216:Nintendo-621@cluster0.zv0lzke.mongodb.net/gameDB?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  dbName: ' gameDB'
-});
+  dbName: 'gameDB'
+})
 
 const db = mongoose.connection;
 
