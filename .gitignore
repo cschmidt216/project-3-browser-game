@@ -4,7 +4,7 @@
 /server/node_modules
 /.pnp
 .pnp.js
-
+/node_modules
 /server/seed
 # testing
 /coverage
