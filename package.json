@@ -4,8 +4,8 @@
     "description": "Your project description",
     "main": "server/server.js",
     "scripts": {
-        "start": "node server/server.js",
-        "dev": "nodemon server/server.js"
+        "start": "node app/server/server.js",
+        "dev": "nodemon app/server/server.js"
     },
     "dependencies": {
         "cors": "^2.8.5",
