@@ -22,6 +22,13 @@ function Home() {
   const [opponentCharacter, setOpponentCharacter] = useState();
   const [gameMessages, setGameMessages] = useState([]);
   const [userCanAct, setUserCanAct] = useState(false);
+  const [welcomeMessage, setWelcomeMessage] = useState();
+
+  useEffect(() => {
+    if (user) {
+      setWelcomeMessage(`Welcome, ${user.username}!`);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (data?.getCharacterById) {
@@ -41,6 +48,7 @@ function Home() {
     handleAttack(
       opponentCharacter,
       userCharacter,
+      setOpponentCharacter,
       setUserCharacter,
       move,
       setGameMessages,
@@ -61,27 +69,27 @@ function Home() {
     setUserCanAct(false); // Reset userCanAct
     setGameReset(true);
     if (refetch) {
-      const { data } = await refetch();
-      if (data?.getCharacterById) {
-        const characterWithBoosts = applyStatBoosts(data.getCharacterById);
-        setUserCharacter(characterWithBoosts);
+      try {
+        const { data } = await refetch();
+        if (data?.getCharacterById) {
+          const characterWithBoosts = applyStatBoosts(data.getCharacterById);
+          setUserCharacter(characterWithBoosts);
+          setGameReset(false);
+        }
+      } catch (error) {
+        console.error("Error in refetching data: ", error);
       }
     }
   };
   
-  // useEffect hook to handle game reset
-  useEffect(() => {
-    if (gameReset) {
-      refetch();
-      setGameReset(false);
-    }
-  }, [gameReset, refetch]);
+
   
   const handleUserAttack = (move) => {
     if (userCanAct) {
       handleAttack(
         userCharacter, 
-        opponentCharacter, 
+        opponentCharacter,
+        setUserCharacter, 
         setOpponentCharacter, 
         move, 
         setGameMessages, 
@@ -97,56 +105,58 @@ function Home() {
 }, [userCharacter]);
 
   
-  const renderContent = () => {
-    if (!user) {
-      return <p>Please log in or sign up to continue.</p>;
-    }
+const renderContent = () => {
+  if (!user) {
+    return <p>Please log in or sign up to continue.</p>;
+  }
 
-    if (!selectedCharacter) {
-      return <p>Please select a character before continuing.</p>;
-    }
+  if (!selectedCharacter) {
+    return <p>Please select a character before continuing.</p>;
+  }
 
-    if (loading) return <p>Loading...</p>; 
-    if (error) return <p>Error: {error.message}</p>; 
+  if (loading) return <p>Loading...</p>; 
+  if (error) return <p>Error: {error.message}</p>; 
 
-    return (
-      <div>
-        <h1>Welcome, {user.username}!</h1>
-        {userCharacter && <BattleCard character={userCharacter} isUserCard={true} onAttack={handleUserAttack} userCanAct={userCanAct} setUserCanAct={setUserCanAct} />}
-      </div>
-    );
-  };
+  return (
+    <div className="userContent">
+      {userCharacter && 
+        <BattleCard character={userCharacter} isUserCard={true} onAttack={handleUserAttack} userCanAct={userCanAct} setUserCanAct={setUserCanAct} />}
+    </div>
+  );
+};
 
   const renderOpponent = () => {
     if (opponentCalled && !opponentLoading && opponentData) {
-      return <BattleCard character={opponentCharacter} isUserCard={false} />;
+      return <BattleCard character={opponentCharacter} isUserCard={false} className="opponentCard" />;
     }
   };
 
   return (
-    <div>
-      <h1>Home Page</h1>
-      {renderContent()}
-      {user && selectedCharacter && 
-        <>
-      {user && selectedCharacter && !opponentCharacter &&
-        <>
-        <Button 
-          variant="contained" 
-          color="primary"
-          onClick={() => {
-            getRandomOpponent({ variables: { userId: user._id } });
-            setUserCanAct(true);
-          }}
-        >
-          Find Battle
-        </Button>
+    <div className="gameContainer">
+      <h1>{welcomeMessage}</h1> 
+      <div className="battleArea" style={{display: 'flex', justifyContent: 'space-around'}}>
+        {renderContent()}
+        {user && selectedCharacter && renderOpponent()}
+      </div>
+      <>
+        {user && selectedCharacter && !opponentCharacter &&
+          <>
+            <Button 
+              variant="contained" 
+              color="primary"
+              className="battleButton"
+              onClick={() => {
+                getRandomOpponent({ variables: { userId: user._id } });
+                setUserCanAct(true);
+                setWelcomeMessage(`Good Luck, ${user.username}!`);
+              }}
+            >
+              Find Battle
+            </Button>
+          </>
+        }
       </>
-      }
-          {renderOpponent()}
-        </>
-      }
-            <Feed>
+      <Feed className="feedContainer">
         {gameMessages.map((message, index) => (
           <Feed.Event key={index}>
             <Feed.Content>

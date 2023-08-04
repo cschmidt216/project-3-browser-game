@@ -86,10 +86,10 @@ const movesData = [
     speedboost: 0,
     },
     {
-    name: 'Block',
-    description: 'Blocks the next attack',
+    name: 'Expose',
+    description: 'Reduces your opponent\'s defense',
     uses: 3,
-    damage: 0,
+    damage: 1,
     accuracy: 100,
     modifier: 7,
     healthboost: 5,

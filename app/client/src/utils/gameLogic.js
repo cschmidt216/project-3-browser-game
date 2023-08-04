@@ -17,50 +17,113 @@ export function applyStatBoosts(character) {
   }
 
   export function handleAttack(
-    character, 
-    opponentCharacter, 
-    setOpponentCharacter, 
-    move, 
-    setGameMessages, 
+    character,
+    opponentCharacter,
+    setCharacter,
+    setOpponentCharacter,
+    move,
+    setGameMessages,
     handleOpponentAttack,
-    gameOverCallback // <-- Add this line
+    gameOverCallback
   ) {
-    // Calculate damage based on character's strength, move's damage and opponent's defense
-    const rawDamage = move.damage + character.strength;
-    const defenseFactor = opponentCharacter.defense > rawDamage ? rawDamage : opponentCharacter.defense;
-    const finalDamage = rawDamage - defenseFactor;
-
-    // Subtract damage from opponent's health
-    const updatedOpponentCharacter = { ...opponentCharacter };
-    updatedOpponentCharacter.health -= finalDamage;
-
-    
+    const randomValue = Math.random();
   
-    // Update the opponent character's health
-    setOpponentCharacter(updatedOpponentCharacter);
+    if (randomValue <= move.accuracy / 100) {
+      const rawDamage = move.damage + character.strength;
+      const defenseFactor = opponentCharacter.defense > rawDamage ? rawDamage : opponentCharacter.defense;
+      let finalDamage = rawDamage - defenseFactor;
   
-    // Add game message
-    const newMessage = `${character.name} used ${move.name}, dealing ${finalDamage} damage.`;
-    setGameMessages((gameMessages) => [...gameMessages, newMessage]);
-  
-    // Check for game over after the state update
-    if (updatedOpponentCharacter.health <= 0 || character.health <= 0) {
-      if (updatedOpponentCharacter.health <= 0) {
-        const gameOverMessage = `Game over, ${updatedOpponentCharacter.name}'s health reached 0. Resetting in 5 seconds.`;
-        setGameMessages((gameMessages) => [...gameMessages, gameOverMessage]);
-      } else {
-        const gameOverMessage = `Game over, ${character.name}'s health reached 0. Resetting in 5 seconds.`;
-        setGameMessages((gameMessages) => [...gameMessages, gameOverMessage]);
+      let characterModifier = false;
+      switch (move.modifier) {
+        case 1:
+          opponentCharacter.strength = Math.max(opponentCharacter.strength - 4, 0);
+          characterModifier = true;
+          break;
+        case 2:
+          finalDamage += character.speed;
+          break;
+        case 3:
+          finalDamage = 0;
+          character.defense = Math.max(character.defense + 4, 0);
+          characterModifier = true;
+          break;
+        case 4:
+          finalDamage = 0;
+          character.health = Math.max(character.health + 10, 0);
+          characterModifier = true;
+          break;
+        case 5:
+          character.strength = Math.max(character.strength - 3, 0);
+          character.defense = Math.max(character.defense - 3, 0);
+          character.speed = Math.max(character.speed - 3, 0);
+          characterModifier = true;
+          break;
+        case 6:
+          finalDamage = 0;
+          character.strength = Math.max(character.strength + 4, 0);
+          characterModifier = true;
+          break;
+        case 7:
+          opponentCharacter.defense = Math.max(opponentCharacter.defense - 4, 0);
+          characterModifier = true;
+          break;
+        default:
+          break;
       }
-              
-      // If game over, call the callback function after 5 seconds
+  
+      opponentCharacter.health = Math.max(opponentCharacter.health - finalDamage, 0);
+  
+      setOpponentCharacter({ ...opponentCharacter });
+  
+      if (characterModifier) {
+        setCharacter({ ...character });
+      }
+  
+      const newMessage = `${character.name} used ${move.name}, dealing ${finalDamage} damage.`;
+  
+      // Limit the messages to 5 most recent ones
+      setGameMessages((gameMessages) => {
+        const updatedMessages = [...gameMessages, newMessage];
+        while (updatedMessages.length > 5) {
+          updatedMessages.shift(); // remove the first message if there are more than 5
+        }
+        return updatedMessages;
+      });
+  
+    } else {
+      const newMessage = `${character.name} used ${move.name}, but it missed.`;
+  
+      // Limit the messages to 5 most recent ones
+      setGameMessages((gameMessages) => {
+        const updatedMessages = [...gameMessages, newMessage];
+        while (updatedMessages.length > 5) {
+          updatedMessages.shift(); // remove the first message if there are more than 5
+        }
+        return updatedMessages;
+      });
+    }
+  
+    if (opponentCharacter.health <= 0 || character.health <= 0) {
+      let gameOverMessage = `Game over, ${character.name}'s health reached 0. Resetting in 5 seconds.`;
+      if (opponentCharacter.health <= 0) {
+        gameOverMessage = `Game over, ${opponentCharacter.name}'s health reached 0. Resetting in 5 seconds.`;
+      }
+  
+      // Limit the messages to 5 most recent ones
+      setGameMessages((gameMessages) => {
+        const updatedMessages = [...gameMessages, gameOverMessage];
+        while (updatedMessages.length > 5) {
+          updatedMessages.shift(); // remove the first message if there are more than 5
+        }
+        return updatedMessages;
+      });
+  
       if (gameOverCallback) {
         setTimeout(gameOverCallback, 5000);
       }
-      return; // Skip the AI turn and other actions
+      return;
     }
   
-    // AI turn
-    const aiMove = aiTurn(updatedOpponentCharacter);
-    setTimeout(() => handleOpponentAttack(aiMove), 1000); // Simulate delay for AI turn
+    const aiMove = aiTurn(opponentCharacter);
+    setTimeout(() => handleOpponentAttack(aiMove), 1000);
   }

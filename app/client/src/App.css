@@ -36,3 +36,44 @@
     transform: rotate(360deg);
   }
 }
+
+/* New CSS */
+.gameContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userContent {
+  text-align: center;
+}
+
+.battleButton {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.opponentCard {
+  align-self: flex-end;
+}
+
+.feedContainer {
+  width: 100%;
+  text-align: center;
+}
+.battleCard {
+  margin: auto 0;
+}
+
+.feedContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+}
+.battleArea {
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;  /* Ensures all children take the same height */
+}
