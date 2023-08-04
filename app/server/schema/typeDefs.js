@@ -16,12 +16,10 @@ type Users {
     createdAt: String!
     shape: String!
     style: String!
-    stat1: Float
-    stat2: Float
-    stat3: Float
-    stat4: Float
-    stat5: Float
-    stat6: Float
+    health: Float
+    strength: Float
+    defense: Float
+    speed: Float
     moves: [Moves]!
   }
   
@@ -33,12 +31,10 @@ type Users {
     damage: Float!
     accuracy: Float!
     modifier: Float!
-    stat1boost: Float
-    stat2boost: Float
-    stat3boost: Float
-    stat4boost: Float
-    stat5boost: Float
-    stat6boost: Float
+    healthboost: Float
+    strengthboost: Float
+    defenseboost: Float
+    speedboost: Float
   }
   input UserInput {
     username: String!

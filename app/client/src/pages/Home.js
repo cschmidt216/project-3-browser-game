@@ -168,12 +168,10 @@ const GET_CHARACTER = gql`
       _id
       createdAt
       name
-      stat1
-      stat2
-      stat3
-      stat4
-      stat5
-      stat6
+      health
+      strength
+      defense
+      speed
       moves {
         _id
         name
@@ -182,12 +180,10 @@ const GET_CHARACTER = gql`
         damage
         accuracy
         modifier
-        stat1boost
-        stat2boost
-        stat3boost
-        stat4boost
-        stat5boost
-        stat6boost
+        healthboost
+        strengthboost
+        defenseboost
+        speedboost
       }
     }
   }
@@ -198,12 +194,10 @@ const FIND_RANDOM_OPPONENT = gql`
       _id
       createdAt
       name
-      stat1
-      stat2
-      stat3
-      stat4
-      stat5
-      stat6
+      health
+      strength
+      defense
+      speed
       moves {
         _id
         name
@@ -212,12 +206,10 @@ const FIND_RANDOM_OPPONENT = gql`
         damage
         accuracy
         modifier
-        stat1boost
-        stat2boost
-        stat3boost
-        stat4boost
-        stat5boost
-        stat6boost
+        healthboost
+        strengthboost
+        defenseboost
+        speedboost
       }
     }
   }

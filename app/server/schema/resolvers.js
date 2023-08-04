@@ -49,18 +49,25 @@ const resolvers = {
       }
     },
    //make a query to find all moves belonging to a character
-    async getAllMovesForCharacter(_, { characterId }) {
-      try {
-        const moves = await Moves.find({ characterId });
-        if (moves) {
-          return moves;
-        } else {
-          throw new Error('Moves not found');
-        }
-      } catch (err) {
-        throw new Error(err);
+   async getAllMovesForCharacter(_, { characterId }) {
+    try {
+      const character = await Characters.findById(characterId);
+      if (!character) {
+        throw new Error('Character not found');
       }
-    },
+  
+      const moveIds = character.moves;
+      const moves = await Moves.find({ _id: { $in: moveIds } });
+  
+      if (moves.length) {
+        return moves;
+      } else {
+        throw new Error('Moves not found');
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
     async getAllMoves(_, args, context) {
     try {
       const moves = await Moves.find();
@@ -160,12 +167,10 @@ const resolvers = {
         shape: characterInput.shape,
         style: characterInput.style,
         moves: characterInput.moves,
-        stat1: 100,
-        stat2: 10,
-        stat3: 10,
-        stat4: 10,
-        stat5: 10,
-        stat6: 10,
+        health: 100,
+        strength: 10,
+        defense: 10,
+        speed: 10,
       });
 
       await character.save();

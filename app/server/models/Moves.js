@@ -7,12 +7,10 @@ const moveSchema = new Schema({
   damage: Number,
   accuracy: Number,
   modifier: Number,
-  stat1boost: Number,
-  stat2boost: Number,
-  stat3boost: Number,
-  stat4boost: Number,
-  stat5boost: Number,
-  stat6boost: Number
+  healthboost: Number,
+  strengthboost: Number,
+  defenseboost: Number,
+  speedboost: Number,
 });
 
 module.exports = model('Moves', moveSchema);

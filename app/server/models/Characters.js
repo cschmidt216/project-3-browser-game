@@ -7,12 +7,10 @@ const characterSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
   shape: { type: String, required: true },
   style: { type: String, required: true },
-  stat1: Number,
-  stat2: Number,
-  stat3: Number,
-  stat4: Number,
-  stat5: Number,
-  stat6: Number,
+  health: Number,
+  strength: Number,
+  defense: Number,
+  speed: Number,
   moves: { 
     type: [{ type: Schema.Types.ObjectId, ref: 'Moves' }],
     validate: {

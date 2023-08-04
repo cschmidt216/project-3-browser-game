@@ -13,18 +13,16 @@ function BattleCard({ character, isUserCard, onAttack, userCanAct }) {
         <Card.Description>
           <p>Stats:</p>
           <ul>
-            <li>Stat 1: {character.stat1}</li>
-            <li>Stat 2: {character.stat2}</li>
-            <li>Stat 3: {character.stat3}</li>
-            <li>Stat 4: {character.stat4}</li>
-            <li>Stat 5: {character.stat5}</li>
-            <li>Stat 6: {character.stat6}</li>
+            <li>Health: {character.health}</li>
+            <li>Strength: {character.strength}</li>
+            <li>Defense: {character.defense}</li>
+            <li>Speed: {character.speed}</li>
           </ul>
           <p>Moves:</p>
           {character.moves.map((move) => (
             <Button 
               key={move._id} 
-              disabled={!isUserCard || !userCanAct} // add the `userCanAct` condition here
+              disabled={!isUserCard || !userCanAct || move.uses === 0} 
               onClick={() => isUserCard && onAttack(move)}
             >
               {move.name} ({move.uses})

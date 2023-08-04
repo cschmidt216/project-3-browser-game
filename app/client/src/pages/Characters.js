@@ -62,12 +62,10 @@ const GET_CHARACTERS = gql`
         damage
         accuracy
         modifier
-        stat1boost
-        stat2boost
-        stat3boost
-        stat4boost
-        stat5boost
-        stat6boost
+        healthboost
+        strengthboost
+        defenseboost
+        speedboost
       }
     }
   }
