@@ -1,7 +1,7 @@
 const { seedMoves } = require('./seedMoves');
 const mongoose = require('mongoose');
 
-const connectionString = "mongodb+srv://cschmidt216:Nintendo-621@cluster0.zv0lzke.mongodb.net/gameDB?retryWrites=true&w=majority"
+const connectionString = "mongodb://localhost:27017/gameDB"
   
 mongoose.connect(connectionString);
 
