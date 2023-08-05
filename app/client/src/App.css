@@ -2,42 +2,6 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* New CSS */
 .gameContainer {
   display: flex;
   flex-direction: column;
@@ -61,10 +25,19 @@
   width: 100%;
   text-align: center;
 }
-.battleCard {
-  margin: auto 0;
+.battleArea {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center; 
+  gap: 60px;  
 }
 
+.battleCard {
+  margin: 0 auto;
+  margin-left: 20px; /* Adds margin to the left */
+  margin-right: 20px; /* Adds margin to the right */
+}
 .feedContainer {
   width: 100%;
   display: flex;
@@ -72,8 +45,139 @@
   justify-content: center;
   overflow-y: auto;
 }
-.battleArea {
+
+button {
+  background: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.card {
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  background: #fff;
+  margin-bottom: 20px;
+}
+
+/* Specific Styles */
+
+.gameContainer {
+  margin-top: 20px;
+}
+
+.battleButton {
+  margin: 20px 0;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.opponentCard {
+  margin-left: 10px;
+}
+
+.feedContainer {
+  height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  max-width: 800px;
+}
+
+.characterCard {
   display: flex;
-  justify-content: space-around;
-  align-items: stretch;  /* Ensures all children take the same height */
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-page {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
+
+.form-page h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-page form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-page form input,
+.form-page form select {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+/* Additional Specific Styles */
+.create-page {
+  margin-bottom: 30px;
+}
+
+.create-page .move-card {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.create-page .move-card.selected {
+  border-color: #007BFF;
+}
+
+.button
+{
+  background-color: #007BFF;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.movesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.moveButton {
+  margin-bottom: 10px;  
+}
+.battleCard {
+  margin: 0px;
+}
+.userCard,
+.opponentCard {
+  margin: 0 !important;
 }

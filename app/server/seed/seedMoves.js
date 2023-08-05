@@ -97,6 +97,30 @@ const movesData = [
     defenseboost: 2,
     speedboost: 0,
     },
+    {
+    name: 'Trip',
+    description: 'Reduces your opponent\'s speed',
+    uses: 5,
+    damage: 3,
+    accuracy: 100,
+    modifier: 8,
+    healthboost: 1,
+    strengthboost: 1,
+    defenseboost: 0,
+    speedboost: 2,
+    },
+    {
+    name: 'Evasive Maneuvers',
+    description: 'Increases your speed',
+    uses: 10,
+    damage: 0,
+    accuracy: 100,
+    modifier: 9,
+    healthboost: 3,
+    strengthboost: 1,
+    defenseboost: 0,
+    speedboost: 1,
+    },
 ];
 
 async function seedMoves() {

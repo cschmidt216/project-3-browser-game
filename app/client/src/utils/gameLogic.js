@@ -26,9 +26,14 @@ export function applyStatBoosts(character) {
     handleOpponentAttack,
     gameOverCallback
   ) {
-    const randomValue = Math.random();
+    // Bypass the accuracy check for certain moves
+    const guaranteedMoves = [3, 4, 6, 9];
+    const bypassAccuracyCheck = guaranteedMoves.includes(move.modifier);
   
-    if (randomValue <= move.accuracy / 100) {
+    const randomValue = Math.random();
+    const accuracyCheck = (randomValue <= (move.accuracy - opponentCharacter.speed) / 100) || bypassAccuracyCheck;
+  
+    if (accuracyCheck) {
       const rawDamage = move.damage + character.strength;
       const defenseFactor = opponentCharacter.defense > rawDamage ? rawDamage : opponentCharacter.defense;
       let finalDamage = rawDamage - defenseFactor;
@@ -65,6 +70,15 @@ export function applyStatBoosts(character) {
           break;
         case 7:
           opponentCharacter.defense = Math.max(opponentCharacter.defense - 4, 0);
+          characterModifier = true;
+          break;
+        case 8:
+          opponentCharacter.speed = Math.max(opponentCharacter.speed - 4, 0);
+          characterModifier = true;
+          break;
+        case 9:
+          finalDamage = 0;
+          character.speed = Math.max(character.speed + 4, 0);
           characterModifier = true;
           break;
         default:

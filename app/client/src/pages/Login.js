@@ -21,7 +21,6 @@ function Login() {
   
     const [loginUser] = useMutation(LOGIN_USER, {
         update(_, result) {
-          console.log(result.data.loginUser);
           context.login(result.data.loginUser);
           localStorage.setItem('jwtToken', result.data.loginUser.token); // Store the token in local storage
           navigate('/'); // Use navigate here
@@ -35,7 +34,7 @@ function Login() {
     };
 
     return (
-        <div>
+        <div className='form-page'>
             <Form onSubmit={Submit} noValidate>
                 <h1>Login</h1>
                 <Form.Input

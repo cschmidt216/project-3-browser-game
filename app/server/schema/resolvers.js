@@ -180,22 +180,18 @@ const resolvers = {
 
       return character;
     },
-  
-  //make a mutation to delete a character
-  async deleteCharacter(_, { characterId }, context) {
-    const user = authMiddleware(context);
-    try {
-      const character = await Characters.findById(characterId);
-      if (user._id === character.user) {
-        await character.delete();
-        return 'Character deleted successfully';
-      } else {
-        throw new Error('Action not allowed');
-      }
-    } catch (err) {
-      throw new Error(err);
-    }
-  },
+
+async deleteCharacter(_, { characterId }, context) {
+  // const user = authMiddleware(context);
+  try {
+    const character = await Characters.findById(characterId);
+    
+    await character.delete();
+    return 'Character deleted successfully';
+  } catch (err) {
+    throw new Error(err);
+  }
+},
 },
 Characters: {
   moves: async (parent) => {

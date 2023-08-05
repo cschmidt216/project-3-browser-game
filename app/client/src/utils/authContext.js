@@ -38,6 +38,7 @@ function authReducer(state, action) {
         return {
           ...state,
           user: null,
+          selectCharacter: null 
         };
       case 'SELECT_CHARACTER':
         return {

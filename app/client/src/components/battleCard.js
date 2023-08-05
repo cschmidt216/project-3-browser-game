@@ -1,13 +1,13 @@
 import React from 'react';
 import { Card, Button } from 'semantic-ui-react';
 
-function BattleCard({ character, isUserCard, onAttack, userCanAct }) {
+function BattleCard({ character, isUserCard, onAttack, userCanAct, className }) {
   if (!character) {
     return <p>Loading...</p>; 
   }
 
   return (
-    <Card>
+    <Card className={className}>
       <Card.Content>
         <Card.Header>{character.name}</Card.Header>
         <Card.Description>
@@ -19,15 +19,18 @@ function BattleCard({ character, isUserCard, onAttack, userCanAct }) {
             <li>Speed: {character.speed}</li>
           </ul>
           <p>Moves:</p>
-          {character.moves.map((move) => (
-            <Button 
-              key={move._id} 
-              disabled={!isUserCard || !userCanAct || move.uses === 0} 
-              onClick={() => isUserCard && onAttack(move)}
-            >
-              {move.name} ({move.uses})
-            </Button>
-          ))}
+          <div className="movesContainer">
+            {character.moves.map((move) => (
+              <Button 
+                key={move._id} 
+                disabled={!isUserCard || !userCanAct || move.uses === 0} 
+                onClick={() => isUserCard && onAttack(move)}
+                className='moveButton'
+              >
+                {move.name}
+              </Button>
+            ))}
+          </div>
         </Card.Description>
       </Card.Content>
     </Card>

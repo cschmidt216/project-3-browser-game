@@ -63,18 +63,6 @@ function CharacterCreation() {
         defense: 10,
         speed: 10,
       },
-
-    },
-    update: (_, result) => {
-      console.log('Update after character creation:', result); // log the result after update
-    },
-    onCompleted: (data) => {
-      // Handle the completion of character creation if needed
-      console.log('Character created (in onCompleted):', data.createCharacter); // log the created character
-    },
-    onError: (error) => {
-      // Handle any errors that occur during character creation
-      console.error('Error creating character (in onError):', error.message); // log the error message
     },
   });
 
@@ -105,7 +93,7 @@ function CharacterCreation() {
   if (!data || !data.getAllMoves) return 'No Moves Data...';
 
   return (
-    <div>
+    <div className='form-page create-page'>
         <Form onSubmit={onSubmit} noValidate>
             <h1>Create Character</h1>
             <Form.Input 
@@ -148,10 +136,11 @@ function CharacterCreation() {
                 move={move}
                 selected={selectedMoves.includes(move._id)}
                 onClick={() => onMovesChange(move._id)}
+                
               />
             ))}
         </Card.Group>
-        <Button primary onClick={onSubmit}>
+        <Button className='button' primary onClick={onSubmit}>
             Select Moves and Create Character
         </Button>
     </div>

@@ -22,7 +22,6 @@ function Signup() {
 
     const [addUser] = useMutation(CREATE_USER, {
         update(_, result) {
-            console.log(result);
             context.login(result.data.createUser);
             navigate('/'); // Use navigate here
         },
@@ -35,7 +34,7 @@ function Signup() {
     };
 
     return (
-        <div>
+        <div className='form-page'>
             <Form onSubmit={Submit} noValidate>
                 <h1>Sign Up</h1>
                 <Form.Input 

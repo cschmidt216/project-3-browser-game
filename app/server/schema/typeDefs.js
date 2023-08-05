@@ -66,7 +66,7 @@ type Users {
     createUser(userInput: UserInput): Users!
     loginUser(loginInput: LoginInput): Users!
     createCharacter(characterInput: CharacterInput): Characters!
-    deleteCharacter(characterId: ID!): Characters!
+    deleteCharacter(characterId: ID!): String!
   }
 
 `;

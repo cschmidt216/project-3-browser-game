@@ -2,9 +2,14 @@ import React, { useContext, useState } from 'react';
 import { Card, Button, Modal } from 'semantic-ui-react';
 import { AuthContext } from '../utils/authContext';
 
-function CharacterCard({ character }) {
+function CharacterCard({ character, deleteCharacter }) {
   const [modalOpen, setModalOpen] = useState(false);
   const { selectCharacter } = useContext(AuthContext);
+
+  const handleDelete = () => {
+    deleteCharacter({ variables: { characterId: character._id } });
+    setModalOpen(false);
+  };
 
   const handleSelect = () => {
     selectCharacter(character._id);
@@ -38,6 +43,9 @@ function CharacterCard({ character }) {
             </Modal.Description>
           </Modal.Content>
           <Modal.Actions>
+            <Button color='red' onClick={handleDelete}>
+              Delete
+            </Button>
             <Button color='black' onClick={() => setModalOpen(false)}>
               Close
             </Button>
