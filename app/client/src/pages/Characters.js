@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import CharacterCard from '../components/CharacterCard';
 import { AuthContext } from '../utils/authContext'; // Import AuthContext
 
+
 function Characters() {
     const context = useContext(AuthContext); // Initialize AuthContext
     const { loading, error, data, refetch} = useQuery(GET_CHARACTERS, {
@@ -58,6 +59,10 @@ const GET_CHARACTERS = gql`
       _id
       createdAt
       name
+      health
+      strength 
+      defense
+      speed
       moves {
         _id
         name
